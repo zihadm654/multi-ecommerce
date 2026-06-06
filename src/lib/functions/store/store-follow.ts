@@ -19,43 +19,45 @@ export const toggleStoreFollow = createServerFn({ method: "POST" })
 
     const { shopId } = data;
 
-    const existing = await db.query.storeFollowers.findFirst({
-      where: and(
-        eq(storeFollowers.userId, userId),
-        eq(storeFollowers.shopId, shopId),
-      ),
-    });
-
-    if (existing) {
-      await db
-        .delete(storeFollowers)
-        .where(
-          and(
-            eq(storeFollowers.userId, userId),
-            eq(storeFollowers.shopId, shopId),
-          ),
-        );
-
-      await db
-        .update(shops)
-        .set({ followersCount: sql`GREATEST(${shops.followersCount} - 1, 0)` })
-        .where(eq(shops.id, shopId));
-
-      return { following: false };
-    } else {
-      await db.insert(storeFollowers).values({
-        id: crypto.randomUUID(),
-        userId,
-        shopId,
+    return await db.transaction(async (tx) => {
+      const existing = await tx.query.storeFollowers.findFirst({
+        where: and(
+          eq(storeFollowers.userId, userId),
+          eq(storeFollowers.shopId, shopId),
+        ),
       });
 
-      await db
-        .update(shops)
-        .set({ followersCount: sql`${shops.followersCount} + 1` })
-        .where(eq(shops.id, shopId));
+      if (existing) {
+        await tx
+          .delete(storeFollowers)
+          .where(
+            and(
+              eq(storeFollowers.userId, userId),
+              eq(storeFollowers.shopId, shopId),
+            ),
+          );
 
-      return { following: true };
-    }
+        await tx
+          .update(shops)
+          .set({ followersCount: sql`GREATEST(${shops.followersCount} - 1, 0)` })
+          .where(eq(shops.id, shopId));
+
+        return { following: false };
+      } else {
+        await tx.insert(storeFollowers).values({
+          id: crypto.randomUUID(),
+          userId,
+          shopId,
+        });
+
+        await tx
+          .update(shops)
+          .set({ followersCount: sql`${shops.followersCount} + 1` })
+          .where(eq(shops.id, shopId));
+
+        return { following: true };
+      }
+    });
   });
 
 export const checkStoreFollowStatus = createServerFn({ method: "POST" })
