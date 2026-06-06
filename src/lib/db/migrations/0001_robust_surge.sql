@@ -1,8 +1,8 @@
 CREATE TABLE "store_followers" (
-	"id" text PRIMARY KEY NOT NULL,
 	"user_id" text NOT NULL,
 	"shop_id" text NOT NULL,
-	"created_at" timestamp DEFAULT now() NOT NULL
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	CONSTRAINT "store_followers_user_id_shop_id_pk" PRIMARY KEY("user_id","shop_id")
 );
 --> statement-breakpoint
 ALTER TABLE "shops" ADD COLUMN "followers_count" integer DEFAULT 0;--> statement-breakpoint
