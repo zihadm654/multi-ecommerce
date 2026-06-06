@@ -22,8 +22,8 @@ export default function OrdersTable() {
   });
 
   const { data, isPending, error } = useCustomerOrders({
-    limit: 10,
-    offset: 0,
+    limit: pagination.pageSize,
+    offset: pagination.pageIndex * pagination.pageSize,
   });
 
   const orders = data?.orders ?? [];
