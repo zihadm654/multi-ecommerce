@@ -78,7 +78,7 @@ export const shops = pgTable("shops", {
   rating: numeric("rating", { precision: 2, scale: 1 }).default("0.0"),
   totalProducts: integer("total_products").default(0),
   totalOrders: integer("total_orders").default(0),
-  followersCount: integer("followers_count").default(0),
+  followersCount: integer("followers_count").default(0).notNull(),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
