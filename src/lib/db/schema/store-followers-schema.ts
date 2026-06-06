@@ -12,7 +12,9 @@ export const storeFollowers = pgTable("store_followers", {
     .notNull()
     .references(() => shops.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+}, (table) => ({
+  userShopUnique: unique().on(table.userId, table.shopId),
+}));
 
 export const storeFollowersRelations = relations(
   storeFollowers,
