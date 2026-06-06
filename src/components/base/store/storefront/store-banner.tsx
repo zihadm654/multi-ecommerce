@@ -1,18 +1,18 @@
 import { CheckCircle2, Heart, Star } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { useStoreFront } from "@/lib/store/store";
 import { cn } from "@/lib/utils";
 import type { Store } from "@/types/store-types";
 
 interface StoreBannerProps {
   store: Store;
   className?: string;
+  isFollowing?: boolean;
+  onToggleFollow?: () => void;
 }
 
-export default function StoreBanner({ store, className }: StoreBannerProps) {
-  const { isFollowing, toggleFollow } = useStoreFront();
-  const following = isFollowing(store.id);
+export default function StoreBanner({ store, className, isFollowing = false, onToggleFollow }: StoreBannerProps) {
+  const following = isFollowing;
   return (
     <div className={cn("relative overflow-hidden rounded-xl", className)}>
       {/* Banner Image */}
@@ -65,7 +65,7 @@ export default function StoreBanner({ store, className }: StoreBannerProps) {
             <Button
               variant={following ? "secondary" : "default"}
               size="lg"
-              onClick={() => toggleFollow(store.id)}
+              onClick={onToggleFollow}
               className="gap-2"
             >
               <Heart className={cn("size-4", following && "fill-current")} />

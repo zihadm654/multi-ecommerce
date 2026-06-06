@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { storeShopBySlugQueryOptions } from "@/hooks/store/use-store-shops";
+import { storeFollowStatusQueryOptions, useStoreFollowMutations } from "@/hooks/store/use-store-follow";
 import type { Store } from "@/types/store-types";
 
 interface StorePageTemplateProps {
@@ -26,6 +27,14 @@ export default function StorePageTemplate({ slug }: StorePageTemplateProps) {
     isPending,
     error,
   } = useQuery(storeShopBySlugQueryOptions(slug));
+
+  const shopId = shopData?.shop?.id ?? "";
+
+  const { data: followStatus } = useQuery(
+    storeFollowStatusQueryOptions(shopId),
+  );
+
+  const { toggleFollow } = useStoreFollowMutations();
 
   const currentStore = useMemo((): Store | null => {
     if (!shopData?.shop) return null;
@@ -44,7 +53,7 @@ export default function StorePageTemplate({ slug }: StorePageTemplateProps) {
       isVerified: shop.status === "active",
       memberSince: shop.createdAt,
       totalProducts: shop.totalProducts,
-      followers: 0, // TODO: Implement followers
+      followers: shop.followersCount,
       contactEmail: shop.email ?? undefined,
       contactPhone: shop.phone ?? undefined,
       address: shop.address ?? undefined,
@@ -104,7 +113,11 @@ export default function StorePageTemplate({ slug }: StorePageTemplateProps) {
       <BreadcrumbNav items={storeSteps} className="mb-4" />
 
       {/* Store Header */}
-      <StoreHeader store={currentStore} />
+      <StoreHeader
+        store={currentStore}
+        isFollowing={followStatus?.isFollowing}
+        onToggleFollow={() => toggleFollow({ shopId: currentStore.id })}
+      />
 
       {/* Tabbed Content */}
       <div className="mt-8">

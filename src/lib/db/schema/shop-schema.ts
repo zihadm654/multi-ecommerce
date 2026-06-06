@@ -16,6 +16,7 @@ import {
   timestamp,
 } from "drizzle-orm/pg-core";
 import { user } from "./auth-schema";
+import { storeFollowers } from "./store-followers-schema";
 
 /**
  * Vendors Table
@@ -77,6 +78,7 @@ export const shops = pgTable("shops", {
   rating: numeric("rating", { precision: 2, scale: 1 }).default("0.0"),
   totalProducts: integer("total_products").default(0),
   totalOrders: integer("total_orders").default(0),
+  followersCount: integer("followers_count").default(0),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -95,11 +97,12 @@ export const vendorsRelations = relations(vendors, ({ one, many }) => ({
   shops: many(shops),
 }));
 
-export const shopsRelations = relations(shops, ({ one }) => ({
+export const shopsRelations = relations(shops, ({ one, many }) => ({
   vendor: one(vendors, {
     fields: [shops.vendorId],
     references: [vendors.id],
   }),
+  followers: many(storeFollowers),
 }));
 
 // Type exports

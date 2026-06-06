@@ -42,6 +42,7 @@ export interface StoreShop {
   rating: number;
   totalProducts: number;
   totalOrders: number;
+  followersCount: number;
   vendorName: string | null;
   createdAt: string;
 }

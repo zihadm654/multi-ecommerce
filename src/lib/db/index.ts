@@ -73,6 +73,10 @@ import {
   vendors,
   vendorsRelations,
 } from "./schema/shop-schema";
+import {
+  storeFollowers,
+  storeFollowersRelations,
+} from "./schema/store-followers-schema";
 import { tags, tagsRelations } from "./schema/tags-schema";
 import { taxRates, taxRatesRelations } from "./schema/tax-schema";
 import {
@@ -120,6 +124,8 @@ const schema = {
   customerAddressesRelations,
   wishlistItems,
   wishlistItemsRelations,
+  storeFollowers,
+  storeFollowersRelations,
   shippingMethods,
   shippingMethodsRelations,
   productShippingMethods,

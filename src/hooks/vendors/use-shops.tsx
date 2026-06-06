@@ -147,6 +147,7 @@ export const useTransformedShops = (options?: { filterByVendor?: boolean }) => {
       rating: (shop.rating || "0.0") as string,
       totalProducts: shop.totalProducts || 0,
       totalOrders: shop.totalOrders || 0,
+      followersCount: shop.followersCount ?? 0,
       createdAt: shop.createdAt || new Date(),
       updatedAt: shop.updatedAt || new Date(),
     }));

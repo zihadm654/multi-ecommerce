@@ -1,4 +1,5 @@
 import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,24 +11,36 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import type { OrderResponse } from "@/types/orders";
 
-export type Order = {
-  id: string;
-  date: string;
-  status: "Delivered" | "Processing" | "Cancelled";
-  total: number;
-  items: number;
+const statusVariant: Record<
+  string,
+  "secondary" | "default" | "destructive" | "outline"
+> = {
+  delivered: "secondary",
+  confirmed: "default",
+  processing: "default",
+  shipped: "default",
+  pending: "outline",
+  cancelled: "destructive",
+  refunded: "outline",
 };
 
-export const columns: ColumnDef<Order>[] = [
+export const columns: ColumnDef<OrderResponse>[] = [
   {
-    accessorKey: "id",
+    accessorKey: "orderNumber",
     header: "Order ID",
-    cell: ({ row }) => <div className="font-medium">{row.getValue("id")}</div>,
+    cell: ({ row }) => (
+      <div className="font-medium">{row.getValue("orderNumber")}</div>
+    ),
   },
   {
-    accessorKey: "date",
+    accessorKey: "createdAt",
     header: "Date",
+    cell: ({ row }) => {
+      const date = row.getValue("createdAt") as string;
+      return <div>{format(new Date(date), "MMM d, yyyy")}</div>;
+    },
   },
   {
     accessorKey: "status",
@@ -36,13 +49,8 @@ export const columns: ColumnDef<Order>[] = [
       const status = row.getValue("status") as string;
       return (
         <Badge
-          variant={
-            status === "Delivered"
-              ? "secondary"
-              : status === "Processing"
-                ? "default"
-                : "destructive"
-          }
+          variant={statusVariant[status] ?? "outline"}
+          className="capitalize"
         >
           {status}
         </Badge>
@@ -62,6 +70,14 @@ export const columns: ColumnDef<Order>[] = [
     },
   },
   {
+    id: "items",
+    header: "Items",
+    cell: ({ row }) => {
+      const items = row.original.items;
+      return <div>{items.length}</div>;
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => {
       const order = row.original;
@@ -77,7 +93,7 @@ export const columns: ColumnDef<Order>[] = [
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(order.id)}
+              onClick={() => navigator.clipboard.writeText(order.orderNumber)}
             >
               Copy order ID
             </DropdownMenuItem>

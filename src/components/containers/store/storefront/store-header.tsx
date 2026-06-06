@@ -4,9 +4,11 @@ import type { Store } from "@/types/store-types";
 
 interface StoreHeaderProps {
   store: Store;
+  isFollowing?: boolean;
+  onToggleFollow?: () => void;
 }
 
-export default function StoreHeader({ store }: StoreHeaderProps) {
+export default function StoreHeader({ store, isFollowing, onToggleFollow }: StoreHeaderProps) {
   const stats = {
     totalProducts: store.totalProducts,
     followers: store.followers,
@@ -16,7 +18,7 @@ export default function StoreHeader({ store }: StoreHeaderProps) {
 
   return (
     <div className="space-y-6">
-      <StoreBanner store={store} />
+      <StoreBanner store={store} isFollowing={isFollowing} onToggleFollow={onToggleFollow} />
       <StoreStats stats={stats} />
     </div>
   );

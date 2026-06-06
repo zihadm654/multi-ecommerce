@@ -80,6 +80,7 @@ export const getStoreShops = createServerFn({ method: "GET" })
           rating: shops.rating,
           totalProducts: shops.totalProducts,
           totalOrders: shops.totalOrders,
+          followersCount: shops.followersCount,
           vendorId: shops.vendorId,
           createdAt: shops.createdAt,
         })
@@ -138,6 +139,7 @@ export const getStoreShops = createServerFn({ method: "GET" })
       rating: Number(shop.rating ?? 0),
       totalProducts: productCountMap.get(shop.id) ?? 0,
       totalOrders: shop.totalOrders ?? 0,
+      followersCount: shop.followersCount ?? 0,
       vendorName: vendorMap.get(shop.vendorId) ?? null,
       createdAt: shop.createdAt.toISOString(),
     }));
@@ -167,6 +169,7 @@ export const getStoreShopBySlug = createServerFn({ method: "GET" })
         rating: shops.rating,
         totalProducts: shops.totalProducts,
         totalOrders: shops.totalOrders,
+        followersCount: shops.followersCount,
         vendorId: shops.vendorId,
         createdAt: shops.createdAt,
       })
@@ -208,6 +211,7 @@ export const getStoreShopBySlug = createServerFn({ method: "GET" })
       rating: Number(shop.rating ?? 0),
       totalProducts: productCountResult?.count ?? shop.totalProducts ?? 0,
       totalOrders: shop.totalOrders ?? 0,
+      followersCount: shop.followersCount ?? 0,
       vendorName,
       createdAt: shop.createdAt.toISOString(),
     };
