@@ -1,0 +1,2 @@
+ALTER TABLE "shops" ALTER COLUMN "followers_count" SET NOT NULL;--> statement-breakpoint
+ALTER TABLE "store_followers" ADD CONSTRAINT "store_followers_user_id_shop_id_unique" UNIQUE("user_id","shop_id");
